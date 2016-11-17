@@ -101,3 +101,5 @@ fastlane/test_output
 
 *.xcodeproj/
 docs/
+buildlinux
+Package.swift.orig
