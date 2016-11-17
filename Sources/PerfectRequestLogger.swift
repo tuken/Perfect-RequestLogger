@@ -5,11 +5,14 @@ import SwiftMoment
 import PerfectLogger
 import SwiftRandom
 
-public var requestLogFileLocation = "/var/log/perfectLog.log"
+public struct RequestLogFile {
+	private init(){}
+	public static var location = "/var/log/perfectLog.log"
+}
 
 public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 
-	var defaultLogFile = "/var/log/perfectLog.log"
+	var defaultLogFile = RequestLogFile.location
 
 	var randomID: String
 	var sequence: UInt32
@@ -50,10 +53,10 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 //		let interval = start.timeIntervalSinceNow * -1
 		let interval = start.intervalSince(moment()).seconds * -1
 
-		var useFile = requestLogFileLocation
-		if useFile.isEmpty { useFile = defaultLogFile }
+		var useFile = RequestLogFile.location
+		if useFile.isEmpty { useFile = "/var/log/perfectLog.log" }
 
-		LogFile.info("[\(hostname)/\(requestID)] \(start) \"\(method) \(requestURL) \(requestProtocol)/\(protocolVersion.0).\(protocolVersion.1)\" from \(remoteAddress) - \(status) \(length)B in \(interval)s", useFile)
+		LogFile.info("[\(hostname)/\(requestID)] \(start) \"\(method) \(requestURL) \(requestProtocol)/\(protocolVersion.0).\(protocolVersion.1)\" from \(remoteAddress) - \(status) \(length)B in \(interval)s", logFile: useFile)
 
 		callback(.continue)
 	}
