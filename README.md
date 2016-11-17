@@ -55,7 +55,7 @@ Swift Package Manager (SPM) module which provides HTTP request logging filters f
 Add the following dependency to the `Package.swift` file:
 
 ```swift
-.Package(url: "https://github.com/dabfleming/Perfect-RequestLogger.git", majorVersion: 0, minor: 3)
+.Package(url: "https://github.com/PerfectlySoft/Perfect-RequestLogger.git", majorVersion: 0, minor: 3)
 ```
 
 For each file you wish to directly reference the logging, import the module:
