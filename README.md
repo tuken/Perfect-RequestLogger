@@ -45,9 +45,8 @@ Swift Package Manager (SPM) module which provides HTTP request logging filters f
 ## Example Log Output
 
 ```
-[INFO] [servername/WuAyNIIU-1] 2016-10-07 21:49:04 +0000 "GET /one HTTP/1.1" from 127.0.0.1 - 200 64B in 0.000436007976531982s
-[INFO] [servername/WuAyNIIU-2] 2016-10-07 21:49:06 +0000 "GET /two HTTP/1.1" from 127.0.0.1 - 200 64B in 0.000207006931304932s
-[INFO] [servername/WuAyNIIU-3] 2016-10-07 21:49:07 +0000 "GET /three HTTP/1.1" from 127.0.0.1 - 200 66B in 0.00014495849609375s
+[INFO] [62f940aa-f204-43ed-9934-166896eda21c] [servername/WuAyNIIU-1] 2016-10-07 21:49:04 +0000 "GET /one HTTP/1.1" from 127.0.0.1 - 200 64B in 0.000436007976531982s
+[INFO] [ec6a9ca5-00b1-4656-9e4c-ddecae8dde02] [servername/WuAyNIIU-2] 2016-10-07 21:49:06 +0000 "GET /two HTTP/1.1" from 127.0.0.1 - 200 64B in 0.000207006931304932s
 ```
 
 ## Usage
@@ -55,7 +54,7 @@ Swift Package Manager (SPM) module which provides HTTP request logging filters f
 Add the following dependency to the `Package.swift` file:
 
 ```swift
-.Package(url: "https://github.com/PerfectlySoft/Perfect-RequestLogger.git", majorVersion: 0, minor: 3)
+.Package(url: "https://github.com/PerfectlySoft/Perfect-RequestLogger.git", majorVersion: 0)
 ```
 
 For each file you wish to directly reference the logging, import the module:
@@ -82,12 +81,11 @@ These request & response filters add the required hooks to mark the beginning an
 
 ## Setting a custom Logfile location
 
-The default logfile location is `/var/log/perfectLog.log`. To set a custom logfile location, set the `requestLogFileLocation` variable in `main.swift`:
+The default logfile location is `/var/log/perfectLog.log`. To set a custom logfile location, set the `RequestLogFile.location` property:
 
 ``` swift
-requestLogFileLocation = "/var/log/myLog.log"
+RequestLogFile.location = "/var/log/myLog.log"
 ```
-
 
 
 ## Issues
