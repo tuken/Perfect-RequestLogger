@@ -5,6 +5,12 @@ import SwiftMoment
 import PerfectLogger
 import SwiftRandom
 
+#if os(Linux)
+	import LinuxBridge
+#else
+	import Darwin
+#endif
+
 public struct RequestLogFile {
 	private init(){}
 	public static var location = "/var/log/perfectLog.log"
@@ -24,11 +30,20 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		sequence = 0
 	}
 
+	// Returns the current time according to ICU
+	// ICU dates are the number of milliseconds since the reference date of Thu, 01-Jan-1970 00:00:00 GMT
+	func getNow() -> Double {
+
+		var posixTime = timeval()
+		gettimeofday(&posixTime, nil)
+		return Double((posixTime.tv_sec * 1000) + (Int(posixTime.tv_usec)/1000))
+	}
+
 	// Implement HTTPRequestFilter
 	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
 
 		// Store request start time
-		request.scratchPad["start"] = moment()
+		request.scratchPad["start"] = getNow()
 
 		// Store a unique request ID, this can be used in other logging to correlate to the request log
 		sequence += 1
@@ -44,19 +59,19 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		let method = response.request.method
 		let requestURL = response.request.uri
 		let remoteAddress = response.request.remoteAddress.host
-		let start = response.request.scratchPad["start"] as! Moment
+		let start = response.request.scratchPad["start"] as! Double
 		let protocolVersion = response.request.protocolVersion
 		let status = response.status.code
 		let length = response.bodyBytes.count
 		let requestProtocol = response.request.connection is PerfectNet.NetTCPSSL ? "HTTPS" : "HTTP"
 
-//		let interval = start.timeIntervalSinceNow * -1
-		let interval = start.intervalSince(moment()).seconds * -1
+		let interval = Int(self.getNow() - start)
+		let started = moment(start/1000)
 
 		var useFile = RequestLogFile.location
 		if useFile.isEmpty { useFile = "/var/log/perfectLog.log" }
 
-		LogFile.info("[\(hostname)/\(requestID)] \(start) \"\(method) \(requestURL) \(requestProtocol)/\(protocolVersion.0).\(protocolVersion.1)\" from \(remoteAddress) - \(status) \(length)B in \(interval)s", logFile: useFile)
+		LogFile.info("[\(hostname)/\(requestID)] \(started) \"\(method) \(requestURL) \(requestProtocol)/\(protocolVersion.0).\(protocolVersion.1)\" from \(remoteAddress) - \(status) \(length)B in \(interval)ms", logFile: useFile)
 
 		callback(.continue)
 	}
