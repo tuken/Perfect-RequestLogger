@@ -11,11 +11,16 @@ import SwiftRandom
 	import Darwin
 #endif
 
+
+/// Contains the location of the default log file.
 public struct RequestLogFile {
 	private init(){}
+	/// Holds the location of the log file.
 	public static var location = "/var/log/perfectLog.log"
 }
 
+
+/// The main class for logging functionality
 public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 
 	var defaultLogFile = RequestLogFile.location
@@ -23,6 +28,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	var randomID: String
 	var sequence: UInt32
 
+	/// The initializer.
 	public init() {
 		// Generate random string to prefix request IDs
 		randomID = Randoms.randomAlphaNumericString(length: 8)
@@ -39,7 +45,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		return Double((posixTime.tv_sec * 1000) + (Int(posixTime.tv_usec)/1000))
 	}
 
-	// Implement HTTPRequestFilter
+	/// Implementation of the HTTPRequestFilter
 	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
 
 		// Store request start time
@@ -52,7 +58,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		callback(.continue(request, response))
 	}
 
-	// Implement HTTPResponseFilter
+	/// Implement of the HTTPResponseFilter
 	public func filterHeaders(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		let hostname = response.request.serverName
 		let requestID = response.request.scratchPad["requestID"] as! String
@@ -76,7 +82,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		callback(.continue)
 	}
 
-	// Implement HTTPResponseFilter
+	/// Implement of the HTTPResponseFilter
 	public func filterBody(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		callback(.continue)
 	}
