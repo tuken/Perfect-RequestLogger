@@ -61,11 +61,11 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	/// Implement of the HTTPResponseFilter
 	public func filterHeaders(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		let hostname = response.request.serverName
-		let requestID = response.request.scratchPad["requestID"] as! String
+		let requestID = response.request.scratchPad["requestID"] as? String ?? "NoRequestID"
 		let method = response.request.method
 		let requestURL = response.request.uri
 		let remoteAddress = response.request.remoteAddress.host
-		let start = response.request.scratchPad["start"] as! Double
+		let start = response.request.scratchPad["start"] as? Double ?? getNow()
 		let protocolVersion = response.request.protocolVersion
 		let status = response.status.code
 		let length = response.bodyBytes.count
