@@ -82,6 +82,17 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		callback(.continue)
 	}
 
+	/// Wrapper enabling PerfectHTTP 2.1 filter support
+	public static func filterAPIRequest(data: [String:Any]) throws -> HTTPRequestFilter {
+		return RequestLogger()
+	}
+	/// Wrapper enabling PerfectHTTP 2.1 filter support
+	public static func filterAPIResponse(data: [String:Any]) throws -> HTTPResponseFilter {
+		return RequestLogger()
+	}
+
+
+
 	/// Implement of the HTTPResponseFilter
 	public func filterBody(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		callback(.continue)
