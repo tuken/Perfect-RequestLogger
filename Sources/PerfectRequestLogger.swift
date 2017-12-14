@@ -21,7 +21,7 @@ public struct RequestLogFile {
 
 
 /// The main class for logging functionality
-public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
+open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 
 	var defaultLogFile = RequestLogFile.location
 
@@ -46,7 +46,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	}
 
 	/// Implementation of the HTTPRequestFilter
-	public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
+	open func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
 
 		// Store request start time
 		request.scratchPad["start"] = getNow()
@@ -59,7 +59,7 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	}
 
 	/// Implement of the HTTPResponseFilter
-	public func filterHeaders(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
+	open func filterHeaders(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		let hostname = response.request.serverName
 		let requestID = response.request.scratchPad["requestID"] as? String ?? "NoRequestID"
 		let method = response.request.method
@@ -83,18 +83,16 @@ public class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	}
 
 	/// Wrapper enabling PerfectHTTP 2.1 filter support
-	public static func filterAPIRequest(data: [String:Any]) throws -> HTTPRequestFilter {
+	open static func filterAPIRequest(data: [String:Any]) throws -> HTTPRequestFilter {
 		return RequestLogger()
 	}
 	/// Wrapper enabling PerfectHTTP 2.1 filter support
-	public static func filterAPIResponse(data: [String:Any]) throws -> HTTPResponseFilter {
+	open static func filterAPIResponse(data: [String:Any]) throws -> HTTPResponseFilter {
 		return RequestLogger()
 	}
 
-
-
 	/// Implement of the HTTPResponseFilter
-	public func filterBody(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
+	open func filterBody(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
 		callback(.continue)
 	}
 }
