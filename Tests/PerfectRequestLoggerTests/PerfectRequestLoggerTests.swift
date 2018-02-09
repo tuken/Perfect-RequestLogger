@@ -15,7 +15,7 @@ class PerfectRequestLoggerTests: XCTestCase {
 
   func testDate() {
     let now = getNow()
-    let started = (try? formatDate(now, format: "%Y-%m-%d %H:%M:%S %z")) ?? "1970-01-01 00:00:00 +0000"
+    let started = (try? formatDate(now, format: "%Y-%m-%d %H:%M:%S %Z")) ?? "1970-01-01 00:00:00 UTC"
     print("timestamp:", started)
   }
 

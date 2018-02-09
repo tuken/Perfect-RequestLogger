@@ -74,7 +74,7 @@ open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		let requestProtocol = response.request.connection is PerfectNet.NetTCPSSL ? "HTTPS" : "HTTP"
 
 		let interval = Int(getNow() - start)
-    let started = (try? formatDate(start, format: "%Y-%m-%d %H:%M:%S %z")) ?? "1970-01-01 00:00:00 +0000"
+    let started = (try? formatDate(start, format: "%Y-%m-%d %H:%M:%S %Z")) ?? "1970-01-01 00:00:00 UTC"
 
 		var useFile = RequestLogFile.location
 		if useFile.isEmpty { useFile = "/var/log/perfectLog.log" }
