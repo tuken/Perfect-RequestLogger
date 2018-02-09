@@ -1,9 +1,8 @@
 import PerfectLib
+import PerfectCrypto
 import PerfectHTTP
 import PerfectNet
-import SwiftMoment
 import PerfectLogger
-import SwiftRandom
 
 #if os(Linux)
 	import LinuxBridge
@@ -11,6 +10,18 @@ import SwiftRandom
 	import Darwin
 #endif
 
+extension String {
+  public init(randomAlphaNumericLength: Int) {
+    let array = Array<UInt8>(randomCount: randomAlphaNumericLength)
+    var u:[UInt8] = array.map { ch in
+      let m = ch % 62
+      let (x, y) = m < 10 ? ("0", m) : ( m < 36 ? ("a", m - 10) : ("A", m - 36) )
+      return UInt8(UnicodeScalar(x)?.value ?? 0) + y
+    }
+    u.append(0)
+    self = String(cString: u)
+  }
+}
 
 /// Contains the location of the default log file.
 public struct RequestLogFile {
@@ -23,26 +34,17 @@ public struct RequestLogFile {
 /// The main class for logging functionality
 open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 
-	var defaultLogFile = RequestLogFile.location
+	let defaultLogFile = RequestLogFile.location
 
-	var randomID: String
+	let randomID: String
 	var sequence: UInt32
 
 	/// The initializer.
 	public init() {
 		// Generate random string to prefix request IDs
-		randomID = Randoms.randomAlphaNumericString(length: 8)
+		randomID = String(randomAlphaNumericLength: 8)
 		// Initialize a request count
 		sequence = 0
-	}
-
-	// Returns the current time according to ICU
-	// ICU dates are the number of milliseconds since the reference date of Thu, 01-Jan-1970 00:00:00 GMT
-	func getNow() -> Double {
-
-		var posixTime = timeval()
-		gettimeofday(&posixTime, nil)
-		return Double((posixTime.tv_sec * 1000) + (Int(posixTime.tv_usec)/1000))
 	}
 
 	/// Implementation of the HTTPRequestFilter
@@ -71,8 +73,8 @@ open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		let length = response.bodyBytes.count
 		let requestProtocol = response.request.connection is PerfectNet.NetTCPSSL ? "HTTPS" : "HTTP"
 
-		let interval = Int(self.getNow() - start)
-		let started = moment(start/1000)
+		let interval = Int(getNow() - start)
+    let started = (try? formatDate(start, format: "%Y-%m-%d %H:%M:%S %Z")) ?? "1970-01-01 00:00:00 UTC"
 
 		var useFile = RequestLogFile.location
 		if useFile.isEmpty { useFile = "/var/log/perfectLog.log" }

@@ -1,17 +1,29 @@
 import XCTest
 @testable import PerfectRequestLogger
+import PerfectLib
 
 class PerfectRequestLoggerTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        XCTAssertEqual(PerfectRequestLogger().text, "Hello, World!")
+  func testRandom() {
+    for _ in 0..<16 {
+      let r = RequestLogger()
+      print(r.randomID)
+      XCTAssertFalse(r.randomID.isEmpty)
+      XCTAssertEqual(r.randomID.count, 8)
+      XCTAssertNotEqual(r.randomID, "00000000")
     }
+  }
 
+  func testDate() {
+    let now = getNow()
+    let started = (try? formatDate(now, format: "%Y-%m-%d %H:%M:%S %Z")) ?? "1970-01-01 00:00:00 UTC"
+    print("timestamp:", started)
+  }
 
-    static var allTests : [(String, (PerfectRequestLoggerTests) -> () throws -> Void)] {
-        return [
-            ("testExample", testExample),
-        ]
-    }
+  static var allTests : [(String, (PerfectRequestLoggerTests) -> () throws -> Void)] {
+    return [
+      ("testRandom", testRandom),
+      ("testDate", testDate)
+    ]
+  }
 }
+
