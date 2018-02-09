@@ -1,12 +1,23 @@
-// Generated automatically by Perfect Assistant Application
-// Date: 2017-06-02 14:35:54 +0000
+// swift-tools-version:4.0
+
 import PackageDescription
+
 let package = Package(
-	name: "PerfectRequestLogger",
-	targets: [],
-	dependencies: [
-		.Package(url: "https://github.com/PerfectlySoft/Perfect-Logger.git", majorVersion: 3),
-		.Package(url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", majorVersion: 3),
-		.Package(url: "https://github.com/iamjono/SwiftRandom.git", majorVersion: 0),
-	]
+    name: "PerfectRequestLogger",
+    products: [
+        .library(
+            name: "PerfectRequestLogger",
+            targets: ["PerfectRequestLogger"]),
+    ],
+    dependencies: [
+			.package(url: "https://github.com/PerfectlySoft/Perfect-Logger.git", from: "3.0.0"),
+    ],
+    targets: [
+        .target(
+            name: "PerfectRequestLogger",
+            dependencies: ["PerfectLogger"]),
+        .testTarget(
+            name: "PerfectRequestLoggerTests",
+            dependencies: ["PerfectRequestLogger"]),
+    ]
 )
