@@ -57,7 +57,7 @@ open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		
 		// Store a unique request ID, this can be used in other logging to correlate to the request log
 		let sequence: UInt = queue.sync {
-			self.sequence &+= 1
+			self.sequence  = self.sequence &+ 1
 			return self.sequence
 		}
 		request.scratchPad["requestID"] = "\(randomID)-\(sequence)"
