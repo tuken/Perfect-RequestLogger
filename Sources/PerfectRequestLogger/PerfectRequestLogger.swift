@@ -3,6 +3,7 @@ import PerfectCrypto
 import PerfectHTTP
 import PerfectNet
 import PerfectLogger
+import Dispatch
 
 #if os(Linux)
 	import LinuxBridge
@@ -35,6 +36,7 @@ public struct RequestLogFile {
 open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 
 	let defaultLogFile = RequestLogFile.location
+    private let queue = DispatchQueue(label: "SerialQueue")
 
 	let randomID: String
 	var sequence: UInt32
@@ -54,7 +56,7 @@ open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 		request.scratchPad["start"] = getNow()
 
 		// Store a unique request ID, this can be used in other logging to correlate to the request log
-		sequence += 1
+		let sequence: Int = queue.sync { self.sequence += 1; return Int(self.sequence) }
 		request.scratchPad["requestID"] = "\(randomID)-\(sequence)"
 
 		callback(.continue(request, response))
