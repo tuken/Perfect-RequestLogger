@@ -90,11 +90,11 @@ open class RequestLogger: HTTPRequestFilter, HTTPResponseFilter {
 	}
 	
 	/// Wrapper enabling PerfectHTTP 2.1 filter support
-	static func filterAPIRequest(data: [String:Any]) throws -> HTTPRequestFilter {
+	public static func filterAPIRequest(data: [String:Any]) throws -> HTTPRequestFilter {
 		return RequestLogger()
 	}
 	/// Wrapper enabling PerfectHTTP 2.1 filter support
-	static func filterAPIResponse(data: [String:Any]) throws -> HTTPResponseFilter {
+	public static func filterAPIResponse(data: [String:Any]) throws -> HTTPResponseFilter {
 		return RequestLogger()
 	}
 	
