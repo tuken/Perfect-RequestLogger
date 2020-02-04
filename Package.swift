@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 
 import PackageDescription
 
@@ -10,7 +10,7 @@ let package = Package(
             targets: ["PerfectRequestLogger"]),
     ],
     dependencies: [
-			.package(url: "https://github.com/PerfectlySoft/Perfect-Logger.git", from: "3.0.0"),
+			.package(url: "https://github.com/tuken/Perfect-Logger.git", from: "4.0.0"),
     ],
     targets: [
         .target(
